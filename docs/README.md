@@ -1,61 +1,97 @@
 # Kavch
 
-AI-assisted digital safety platform focused on cyber harassment reporting, deepfake/image misuse triage, evidence preservation, and legal document drafting workflows for India.
+Kavch is an AI-assisted digital safety platform designed to help users move from cyber harassment detection to evidence preservation and legal action in one workflow.
 
-## What Kavch Does
+It combines threat analysis, deepfake/image misuse triage, tamper-evident vaulting, and legal draft generation with India-focused escalation guidance.
 
-- Classifies abusive/threatening text into severity tiers.
-- Scans uploaded images and computes a manipulation risk score.
-- Stores evidence with SHA-256 fingerprints in a vault.
-- Generates legal drafts (FIR, platform takedown, legal notice, NCW complaint).
-- Provides support-path routing (helplines and escalation guidance).
+## Why Kavch
 
-## Key Capabilities
+Victims of cyber harassment often face four problems:
 
-### 1. Threat Analysis
+- Abuse is hard to classify for urgency.
+- Evidence is lost, edited, or not documented correctly.
+- Legal filing language is complex and time-consuming.
+- Support channels are fragmented.
+
+Kavch addresses this by turning incidents into structured outputs: tiered analysis, hash-backed evidence records, and draft legal documents linked to those records.
+
+## Core Features
+
+### 1. Threat Analysis Engine
+
 - Endpoint: `POST /api/classify-threat`
-- Returns tier, confidence, extracted phrases, applicable legal sections, and recommended actions.
-- Supports rule-based fallback if external model/API confidence is low.
+- Returns:
+  - severity tier (`1` to `4`)
+  - confidence
+  - key phrases
+  - applicable legal sections
+  - recommended actions
+- Includes deterministic fallback logic when external AI/model confidence is low, so the UI still returns actionable results.
 
 ### 2. Image / Deepfake Triage
+
 - Endpoint: `POST /api/scan-image`
 - Produces:
   - `manipulation_score` (0-100)
-  - `deepfake_detected` (boolean)
-  - `found_urls` (trace leads when available)
-  - `analysis_notes` and recommendation
-- Uses deterministic heuristic analysis for stable local behavior.
+  - `deepfake_detected` boolean
+  - potential trace leads (`found_urls`)
+  - forensic notes and recommendation
+- Current implementation is heuristic (fast and deterministic), intended for triage and escalation support rather than forensic finality.
 
-### 3. Evidence Vault
+### 3. Tamper-Evident Evidence Vault
+
 - Endpoints:
   - `POST /api/lock-evidence`
   - `GET /api/vault`
   - `DELETE /api/vault/{evidence_id}`
-- Evidence is timestamped and hashed (SHA-256).
-- Certificate view/export available from vault UI.
+- Uses SHA-256 hashing to fingerprint evidence payloads.
+- Provides certificate rendering from vault items (platform/source, hash, timestamp).
+- Supports API + local fallback continuity for frontend sessions.
 
-### 4. Legal Drafting
+### 4. Legal Draft Generation
+
 - Endpoint: `POST /api/generate-legal-docs`
-- Document types:
+- Supported draft types:
   - FIR Draft
   - Platform Takedown
   - Legal Notice
   - NCW Complaint
-- Supports multilingual output with backend and frontend fallback templates.
+- Multilingual support with backend and frontend fallback templates.
+- Designed as assistive drafting; final filing should be reviewed by legal counsel.
 
-### 5. Account + History
-- JWT-based auth with bcrypt password hashing.
-- User-specific history and dashboard stats for threats, scans, evidence, and legal docs.
+### 5. Account, Dashboard, and History
+
+- JWT auth with bcrypt-hashed passwords.
+- Per-user history and stats:
+  - threats
+  - scans
+  - evidence items
+  - legal documents
+
+## Architecture Snapshot
+
+```text
+Frontend (Vanilla JS + Tailwind CDN)
+  -> API wrapper in components.js
+    -> FastAPI backend
+      -> classifier.py (text risk)
+      -> deepfake.py (image risk)
+      -> evidence.py (SHA-256 evidence IDs)
+      -> legal_gen.py (legal draft generation)
+      -> SQLite via SQLAlchemy models
+```
+
+Detailed architecture reference: `docs/ARCHITECTURE.md`.
 
 ## Tech Stack
 
 - Backend: FastAPI, SQLAlchemy, SQLite
-- Auth: JWT + bcrypt
-- ML/Analysis: Scikit-learn model + deterministic fallback logic
-- Frontend: Vanilla JavaScript + Tailwind CSS (CDN)
-- AI integration: Anthropic Claude (optional, graceful fallback when missing)
+- Authentication: JWT, bcrypt
+- Analysis: Scikit-learn model + deterministic fallback pipelines
+- Frontend: Static HTML + Vanilla JS + Tailwind CSS (CDN)
+- Optional AI integration: Anthropic Claude API
 
-## Project Layout
+## Project Structure
 
 ```text
 ShiledHer/
@@ -96,10 +132,11 @@ ShiledHer/
 ## Local Setup
 
 ### Prerequisites
+
 - Python 3.10+
 - Node.js 18+
 
-### Backend
+### 1. Backend
 
 ```bash
 cd backend
@@ -107,7 +144,7 @@ pip install -r requirements.txt
 python -m uvicorn main:app --reload --port 8000
 ```
 
-### Frontend
+### 2. Frontend
 
 ```bash
 cd frontend/public
@@ -127,62 +164,77 @@ GOOGLE_VISION_API_KEY=optional
 ```
 
 Notes:
-- App runs without optional API keys using local fallback logic.
-- Without external keys, quality may be lower but workflows stay functional.
 
-## API Overview
+- App runs without optional API keys using fallback logic.
+- External keys improve generation quality and context, but are not mandatory for core flows.
+
+## API Summary
 
 ### Public / Utility
+
 - `GET /`
 - `GET /api/health`
 - `GET /api/support-contacts`
 
 ### Auth
+
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
 
 ### Threat + Scan
+
 - `POST /api/classify-threat`
 - `POST /api/scan-image`
 - `POST /api/detect-coordination`
 
 ### Evidence
+
 - `POST /api/lock-evidence`
 - `GET /api/vault`
 - `DELETE /api/vault/{evidence_id}`
 
 ### Legal
+
 - `POST /api/generate-legal-docs`
 - `GET /api/legal-docs`
 
 ### History
+
 - `GET /api/history/threats`
 - `GET /api/history/scans`
 
-## Security Notes
+## Security and Integrity Notes
 
-- SHA-256 hashing used for evidence integrity checks.
-- JWT required for protected user routes.
-- Passwords stored as bcrypt hashes.
-- Data access scoped by authenticated user ID on protected endpoints.
+- SHA-256 hashing is used for evidence integrity.
+- Protected routes require JWT bearer auth.
+- Passwords are stored with bcrypt hashes.
+- User-scoped DB filtering is enforced on protected data routes.
+
+## Legal and Product Disclaimer
+
+Kavch is an assistive safety and documentation tool. It does not replace legal representation, law enforcement processes, or certified forensic examination. Always verify details before formal filing.
 
 ## Current Limitations
 
-- Deepfake scoring is heuristic and not a forensic-grade model.
-- Legal drafts are assistive templates and require legal review before filing.
-- Some capabilities degrade gracefully when optional external APIs are not configured.
+- Deepfake scoring is currently heuristic and not a certified forensic model.
+- Legal output quality depends on context completeness and optional AI availability.
+- The repository does not currently expose a production hardening baseline (tests/migrations/CI) by default.
 
 ## Recommended Next Improvements
 
-- Add test suite (unit + API integration + frontend smoke).
-- Add migrations (Alembic) for versioned DB evolution.
-- Add rate limiting and structured audit logging.
-- Add confidence calibration and evaluation dataset for scan/classifier output.
+- Add unit + API integration tests.
+- Add schema migration tooling (Alembic).
+- Add request audit logging and rate limits.
+- Add confidence calibration datasets for classifier/scan outputs.
+- Add root-level `LICENSE` and deployment templates.
 
-## License
+## Contributors
 
-This repository currently does not expose a license file in workspace root. Add a `LICENSE` file before public distribution.
+- Yuvraj Singh
+- Akshat Srivastava
+- Adarsh Kumar Pandey
+- Chigulla Eshita 
 
 ---
 
