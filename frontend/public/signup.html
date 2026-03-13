@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavch | Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #FF4500;
+            --card: #111111;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .input-field {
+            background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 14px 20px;
+            width: 100%;
+            font-size: 14px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        .input-field:focus {
+            border-color: rgba(255, 69, 0, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.08);
+        }
+        .input-field::placeholder {
+            color: #444;
+        }
+        .glow-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, rgba(255,69,0,0.3), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: inherit;
+            z-index: -1;
+        }
+        .strength-bar {
+            height: 3px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+    </style>
+    <script src="components.js"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+    
+    <script>injectNavbar();</script>
+
+    <main class="flex-grow flex items-center justify-center pt-28 pb-20 px-4">
+        
+        <div class="w-full max-w-md reveal">
+            
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#FF4500]/10 border border-[#FF4500]/20 mb-6">
+                    <iconify-icon icon="lucide:user-plus" class="text-3xl text-[#FF4500]"></iconify-icon>
+                </div>
+                <h1 class="font-serif text-3xl md:text-4xl text-white mb-3 tracking-tight">
+                    Create your shield
+                </h1>
+                <p class="text-gray-500 text-sm">Your evidence vault and legal toolkit — secured with your own account</p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMsg" class="hidden mb-6 bg-red-500/10 border border-red-500/20 rounded-2xl px-5 py-3 text-sm text-red-400 flex items-center gap-2">
+                <iconify-icon icon="lucide:alert-circle" class="text-lg shrink-0"></iconify-icon>
+                <span id="errorText"></span>
+            </div>
+
+            <!-- Form -->
+            <form id="signupForm" class="space-y-5">
+                
+                <!-- Name -->
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2 ml-1 uppercase tracking-wider font-medium">Full Name</label>
+                    <input type="text" id="nameInput" class="input-field" placeholder="Your name" required autocomplete="name">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2 ml-1 uppercase tracking-wider font-medium">Email</label>
+                    <input type="email" id="emailInput" class="input-field" placeholder="you@example.com" required autocomplete="email">
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2 ml-1 uppercase tracking-wider font-medium">Password</label>
+                    <div class="relative">
+                        <input type="password" id="passwordInput" class="input-field pr-12" placeholder="Min. 6 characters" required autocomplete="new-password" minlength="6">
+                        <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors">
+                            <iconify-icon icon="lucide:eye" id="eyeIcon" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                    <!-- Password Strength -->
+                    <div class="flex gap-1.5 mt-3 px-1">
+                        <div id="str1" class="strength-bar flex-1 bg-white/5"></div>
+                        <div id="str2" class="strength-bar flex-1 bg-white/5"></div>
+                        <div id="str3" class="strength-bar flex-1 bg-white/5"></div>
+                        <div id="str4" class="strength-bar flex-1 bg-white/5"></div>
+                    </div>
+                    <p id="strengthText" class="text-[10px] text-gray-600 mt-1.5 ml-1 uppercase tracking-wider"></p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2 ml-1 uppercase tracking-wider font-medium">Confirm Password</label>
+                    <input type="password" id="confirmInput" class="input-field" placeholder="Re-enter your password" required autocomplete="new-password">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" 
+                    class="glow-btn w-full bg-[#FF4500] text-white rounded-2xl py-4 text-sm font-medium hover:bg-[#e03d00] transition-all duration-300 flex items-center justify-center gap-2 mt-8 shadow-[0_0_25px_rgba(255,69,0,0.15)]">
+                    <span id="btnText">Create Account</span>
+                    <iconify-icon id="btnIcon" icon="lucide:arrow-right" class="text-lg"></iconify-icon>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-4 my-8">
+                <div class="flex-grow h-px bg-white/5"></div>
+                <span class="text-xs text-gray-600 uppercase tracking-widest">or</span>
+                <div class="flex-grow h-px bg-white/5"></div>
+            </div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+                <p class="text-sm text-gray-500">
+                    Already have an account? 
+                    <a href="login.html" class="text-[#FF4500] hover:text-[#ff6a33] font-medium transition-colors">
+                        Sign in →
+                    </a>
+                </p>
+            </div>
+
+            <!-- Privacy Note -->
+            <div class="mt-10 pt-8 border-t border-white/5">
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-2 text-xs text-gray-600">
+                        <iconify-icon icon="lucide:shield-check" class="text-sm text-[#FF4500]/50"></iconify-icon>
+                        <span>Passwords are hashed with bcrypt — we can never see them</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-gray-600">
+                        <iconify-icon icon="lucide:lock" class="text-sm text-[#FF4500]/50"></iconify-icon>
+                        <span>Your data is private and only visible to you</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>injectFooter();</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // If already logged in, redirect to home
+            if (isLoggedIn()) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const form = document.getElementById('signupForm');
+            const nameInput = document.getElementById('nameInput');
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const confirmInput = document.getElementById('confirmInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            const errorMsg = document.getElementById('errorMsg');
+            const errorText = document.getElementById('errorText');
+            const togglePassword = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const strengthText = document.getElementById('strengthText');
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', () => {
+                const isHidden = passwordInput.type === 'password';
+                passwordInput.type = isHidden ? 'text' : 'password';
+                eyeIcon.setAttribute('icon', isHidden ? 'lucide:eye-off' : 'lucide:eye');
+            });
+
+            // Password strength meter
+            passwordInput.addEventListener('input', () => {
+                const pwd = passwordInput.value;
+                let strength = 0;
+                if (pwd.length >= 6) strength++;
+                if (pwd.length >= 10) strength++;
+                if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) strength++;
+                if (/[0-9]/.test(pwd) || /[^A-Za-z0-9]/.test(pwd)) strength++;
+
+                const colors = ['', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
+                const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+
+                for (let i = 1; i <= 4; i++) {
+                    const bar = document.getElementById(`str${i}`);
+                    bar.className = `strength-bar flex-1 ${i <= strength ? colors[strength] : 'bg-white/5'}`;
+                }
+                strengthText.textContent = pwd.length > 0 ? labels[strength] || '' : '';
+                strengthText.className = `text-[10px] mt-1.5 ml-1 uppercase tracking-wider ${
+                    strength <= 1 ? 'text-red-500' : 
+                    strength === 2 ? 'text-orange-500' : 
+                    strength === 3 ? 'text-yellow-500' : 'text-green-500'
+                }`;
+            });
+
+            // Form submit
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const confirm = confirmInput.value;
+
+                if (!name || !email || !password || !confirm) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters');
+                    return;
+                }
+
+                if (password !== confirm) {
+                    showError('Passwords do not match');
+                    return;
+                }
+
+                // Loading state
+                submitBtn.disabled = true;
+                btnText.textContent = 'Creating account...';
+                btnIcon.setAttribute('icon', 'lucide:loader-2');
+                btnIcon.classList.add('animate-spin');
+                hideError();
+
+                try {
+                    const response = await fetch(`${API_BASE}/api/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.detail || 'Registration failed');
+                    }
+
+                    // Save auth data and redirect
+                    saveAuth(data.token, data.user);
+                    showToast('Welcome to Kavch, ' + data.user.name + '! 🛡️');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 800);
+
+                } catch (err) {
+                    showError(err.message || 'Something went wrong');
+                    resetBtn();
+                }
+            });
+
+            function showError(msg) {
+                errorText.textContent = msg;
+                errorMsg.classList.remove('hidden');
+            }
+
+            function hideError() {
+                errorMsg.classList.add('hidden');
+            }
+
+            function resetBtn() {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Create Account';
+                btnIcon.setAttribute('icon', 'lucide:arrow-right');
+                btnIcon.classList.remove('animate-spin');
+            }
+        });
+    </script>
+</body>
+</html>

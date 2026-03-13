@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavch | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #FF4500;
+            --card: #111111;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @keyframes count-up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stat-number {
+            animation: count-up 0.6s ease-out forwards;
+        }
+    </style>
+    <script src="components.js"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+    
+    <script>injectNavbar();</script>
+
+    <main class="flex-grow pt-32 pb-32">
+        <div class="container mx-auto px-6 max-w-6xl">
+            
+            <!-- Welcome Header -->
+            <section class="mb-16 reveal">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-2 uppercase tracking-widest font-medium">Dashboard</p>
+                        <h1 class="font-serif text-4xl md:text-5xl text-white tracking-tight">
+                            Welcome back, <span id="userName" class="italic text-white/70">...</span>
+                        </h1>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="report.html" class="px-6 py-3 rounded-full text-sm font-medium bg-[#FF4500] text-white hover:bg-[#e03d00] transition-all duration-300 flex items-center gap-2 shadow-[0_0_15px_rgba(255,69,0,0.2)]">
+                            <iconify-icon icon="lucide:shield-alert"></iconify-icon> Report Threat
+                        </a>
+                        <a href="vault.html" class="px-6 py-3 rounded-full text-sm font-medium border border-white/10 text-white hover:bg-white/5 transition-all duration-300 flex items-center gap-2">
+                            <iconify-icon icon="lucide:lock"></iconify-icon> Open Vault
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Grid -->
+            <section class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 reveal" style="transition-delay: 100ms;">
+                
+                <div class="bg-[#111] border border-white/5 rounded-3xl p-6 md:p-8 hover:border-[#FF4500]/20 transition-all duration-500 group">
+                    <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <iconify-icon icon="lucide:shield-alert" class="text-red-400 text-xl"></iconify-icon>
+                    </div>
+                    <p id="statThreats" class="text-3xl md:text-4xl font-bold text-white stat-number">-</p>
+                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Threats Reported</p>
+                </div>
+
+                <div class="bg-[#111] border border-white/5 rounded-3xl p-6 md:p-8 hover:border-[#FF4500]/20 transition-all duration-500 group">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <iconify-icon icon="lucide:scan-face" class="text-blue-400 text-xl"></iconify-icon>
+                    </div>
+                    <p id="statScans" class="text-3xl md:text-4xl font-bold text-white stat-number">-</p>
+                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Image Scans</p>
+                </div>
+
+                <div class="bg-[#111] border border-white/5 rounded-3xl p-6 md:p-8 hover:border-[#FF4500]/20 transition-all duration-500 group">
+                    <div class="w-10 h-10 rounded-xl bg-[#FF4500]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <iconify-icon icon="lucide:lock" class="text-[#FF4500] text-xl"></iconify-icon>
+                    </div>
+                    <p id="statEvidence" class="text-3xl md:text-4xl font-bold text-white stat-number">-</p>
+                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Evidence Locked</p>
+                </div>
+
+                <div class="bg-[#111] border border-white/5 rounded-3xl p-6 md:p-8 hover:border-[#FF4500]/20 transition-all duration-500 group">
+                    <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <iconify-icon icon="lucide:file-text" class="text-green-400 text-xl"></iconify-icon>
+                    </div>
+                    <p id="statLegal" class="text-3xl md:text-4xl font-bold text-white stat-number">-</p>
+                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider">Legal Docs</p>
+                </div>
+
+            </section>
+
+            <!-- Recent Activity + Quick Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Recent Threat Reports -->
+                <div class="lg:col-span-2 bg-[#111] border border-white/5 rounded-3xl p-8 reveal" style="transition-delay: 200ms;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-serif text-xl text-white">Recent Threat Reports</h2>
+                        <a href="#" id="viewAllThreats" class="text-xs text-[#FF4500] hover:text-[#ff6a33] transition-colors">View All →</a>
+                    </div>
+                    
+                    <div id="recentThreats" class="space-y-3">
+                        <div class="text-center py-8 text-gray-600">
+                            <iconify-icon icon="lucide:loader-2" class="text-2xl animate-spin"></iconify-icon>
+                            <p class="text-sm mt-2">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-[#111] border border-white/5 rounded-3xl p-8 reveal" style="transition-delay: 300ms;">
+                    <h2 class="font-serif text-xl text-white mb-6">Quick Actions</h2>
+                    
+                    <div class="space-y-3">
+                        <a href="report.html" class="flex items-center gap-4 p-4 rounded-2xl bg-[#050505] border border-white/5 hover:border-[#FF4500]/30 transition-all duration-300 group">
+                            <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0 group-hover:bg-red-500/20 transition-colors">
+                                <iconify-icon icon="lucide:shield-alert" class="text-red-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="text-sm text-white font-medium">Report Threat</p>
+                                <p class="text-xs text-gray-600">Analyze abusive messages</p>
+                            </div>
+                        </a>
+
+                        <a href="image-scan.html" class="flex items-center gap-4 p-4 rounded-2xl bg-[#050505] border border-white/5 hover:border-blue-500/30 transition-all duration-300 group">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 group-hover:bg-blue-500/20 transition-colors">
+                                <iconify-icon icon="lucide:scan-face" class="text-blue-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="text-sm text-white font-medium">Scan Image</p>
+                                <p class="text-xs text-gray-600">Detect deepfakes</p>
+                            </div>
+                        </a>
+
+                        <a href="vault.html" class="flex items-center gap-4 p-4 rounded-2xl bg-[#050505] border border-white/5 hover:border-[#FF4500]/30 transition-all duration-300 group">
+                            <div class="w-10 h-10 rounded-xl bg-[#FF4500]/10 flex items-center justify-center shrink-0 group-hover:bg-[#FF4500]/20 transition-colors">
+                                <iconify-icon icon="lucide:lock" class="text-[#FF4500]"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="text-sm text-white font-medium">Evidence Vault</p>
+                                <p class="text-xs text-gray-600">Lock & secure evidence</p>
+                            </div>
+                        </a>
+
+                        <a href="legal.html" class="flex items-center gap-4 p-4 rounded-2xl bg-[#050505] border border-white/5 hover:border-green-500/30 transition-all duration-300 group">
+                            <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0 group-hover:bg-green-500/20 transition-colors">
+                                <iconify-icon icon="lucide:file-text" class="text-green-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="text-sm text-white font-medium">Legal Documents</p>
+                                <p class="text-xs text-gray-600">Generate FIR, notices</p>
+                            </div>
+                        </a>
+
+                        <a href="safe-net.html" class="flex items-center gap-4 p-4 rounded-2xl bg-[#050505] border border-white/5 hover:border-purple-500/30 transition-all duration-300 group">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0 group-hover:bg-purple-500/20 transition-colors">
+                                <iconify-icon icon="lucide:heart-handshake" class="text-purple-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="text-sm text-white font-medium">Safe Net</p>
+                                <p class="text-xs text-gray-600">Helplines & support</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>injectFooter();</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Auth guard
+            if (!requireAuth()) return;
+
+            const user = getUser();
+            document.getElementById('userName').textContent = user ? user.name.split(' ')[0] : 'User';
+
+            // Fetch profile & stats
+            try {
+                const profileData = await apiCall('auth/me', null, 'GET');
+                
+                // Update stats with animation
+                animateStat('statThreats', profileData.stats.threat_reports);
+                animateStat('statScans', profileData.stats.scans);
+                animateStat('statEvidence', profileData.stats.evidence_items);
+                animateStat('statLegal', profileData.stats.legal_documents);
+
+            } catch(err) {
+                console.error('Failed to load stats:', err);
+                // Set defaults
+                ['statThreats', 'statScans', 'statEvidence', 'statLegal'].forEach(id => {
+                    document.getElementById(id).textContent = '0';
+                });
+            }
+
+            // Fetch recent threats
+            try {
+                const threatData = await apiCall('history/threats', null, 'GET');
+                const container = document.getElementById('recentThreats');
+                
+                if (threatData.reports.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-8">
+                            <iconify-icon icon="lucide:shield" class="text-3xl text-gray-800 mb-3"></iconify-icon>
+                            <p class="text-sm text-gray-600">No threats reported yet</p>
+                            <a href="report.html" class="inline-flex items-center gap-1 text-xs text-[#FF4500] mt-2 hover:text-[#ff6a33] transition-colors">
+                                Report your first threat <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                            </a>
+                        </div>`;
+                } else {
+                    const tierColors = {
+                        1: { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' },
+                        2: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/20' },
+                        3: { bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/20' },
+                        4: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' }
+                    };
+
+                    container.innerHTML = threatData.reports.slice(0, 5).map(r => {
+                        const c = tierColors[r.tier] || tierColors[1];
+                        const date = new Date(r.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                        return `
+                            <div class="flex items-center gap-4 p-3 rounded-xl bg-[#050505] border border-white/5 hover:border-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-lg ${c.bg} flex items-center justify-center shrink-0">
+                                    <span class="${c.text} text-xs font-bold">T${r.tier}</span>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-sm text-white truncate">${escapeHtml(r.text_preview)}</p>
+                                    <p class="text-xs text-gray-600">${r.label} · ${date}</p>
+                                </div>
+                                <span class="${c.bg} ${c.text} ${c.border} border rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0">${Math.round(r.confidence)}%</span>
+                            </div>`;
+                    }).join('');
+                }
+            } catch(err) {
+                document.getElementById('recentThreats').innerHTML = `
+                    <div class="text-center py-8 text-gray-600">
+                        <p class="text-sm">Could not load recent threats</p>
+                    </div>`;
+            }
+        });
+
+        function animateStat(elementId, value) {
+            const el = document.getElementById(elementId);
+            let current = 0;
+            const duration = 600; // ms
+            const step = Math.max(1, Math.ceil(value / (duration / 30)));
+            
+            if (value === 0) {
+                el.textContent = '0';
+                return;
+            }
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= value) {
+                    current = value;
+                    clearInterval(timer);
+                }
+                el.textContent = current;
+            }, 30);
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

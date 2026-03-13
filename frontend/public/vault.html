@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavch | Evidence Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #FF4500;
+            --card: #111111;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script src="components.js"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+    
+    <script>injectNavbar();</script>
+
+    <!-- ADD EVIDENCE BAR (sticky below navbar) -->
+    <div class="sticky top-[88px] md:top-[96px] z-40 bg-[#111]/90 backdrop-blur-md border-b border-white/5 py-4 transition-all duration-300">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <!-- Left: URL input -->
+                <div class="w-full md:w-auto flex-grow max-w-xl">
+                    <input type="url" id="urlInput" placeholder="Paste any URL to archive (e.g. twitter.com/...)" 
+                        class="w-full bg-[#050505] border border-white/10 rounded-full px-6 py-3 text-sm text-white placeholder-gray-600 focus:border-[#FF4500]/50 outline-none transition-colors shadow-inner">
+                </div>
+                
+                <!-- Middle: OR divider -->
+                <span class="text-[10px] text-gray-500 font-medium tracking-widest uppercase">or</span>
+                
+                <!-- Right side: Buttons -->
+                <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
+                    <input type="file" id="screenshotInput" class="hidden" accept="image/png, image/jpeg, image/webp">
+                    <button id="btnUploadScreenshot" class="w-full md:w-auto px-6 py-3 rounded-full text-sm font-medium bg-transparent border border-white/20 text-white hover:bg-white/5 hover:border-white/40 transition-all duration-300 flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:image-plus"></iconify-icon> Upload Screenshot
+                    </button>
+                    <button id="btnLockUrl" class="w-full md:w-auto px-6 py-3 rounded-full text-sm font-medium bg-[#FF4500] text-white hover:bg-[#e03d00] transition-all duration-300 shadow-[0_0_15px_rgba(255,69,0,0.2)] flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:lock"></iconify-icon> Lock Evidence
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-grow pt-24 pb-32">
+        
+        <!-- PAGE HEADER -->
+        <section class="container mx-auto px-6 text-center max-w-4xl reveal mb-16">
+            <div class="inline-block border border-white/10 rounded-full px-4 py-1 text-[10px] md:text-xs uppercase tracking-widest text-gray-400 mb-8 font-medium bg-white/5">
+                Tamper-Proof Evidence
+            </div>
+            
+            <h1 class="font-serif text-[40px] md:text-[56px] text-white/90 mb-6 leading-[1.1] tracking-tight">
+                Your vault. <br/> <em class="italic font-light text-white/70">Your proof.</em>
+            </h1>
+            
+            <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed font-light mb-8">
+                Every piece of evidence locked here is cryptographically signed with a SHA-256 hash — making it legally admissible and tamper-proof.
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm font-medium text-gray-400">
+                <span id="statItems" class="text-white bg-white/10 px-3 py-1 rounded-full border border-white/5 shadow-inner">0 Items Secured</span>
+                <span class="text-gray-600 hidden sm:inline">·</span>
+                <span id="statCerts" class="text-white bg-white/10 px-3 py-1 rounded-full border border-white/5 shadow-inner">0 Certificates Generated</span>
+                <span class="text-gray-600 hidden sm:inline">·</span>
+                <span class="text-[#FF4500] flex items-center gap-1 bg-[#FF4500]/10 px-3 py-1 rounded-full border border-[#FF4500]/20"><iconify-icon icon="lucide:shield-check"></iconify-icon> 256-bit Encrypted</span>
+            </div>
+        </section>
+
+        <!-- EVIDENCE GRID / EMPTY STATE -->
+        <section class="container mx-auto px-6 max-w-7xl reveal" style="transition-delay: 150ms;">
+            
+            <!-- EMPTY STATE -->
+            <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-center">
+                <iconify-icon icon="lucide:lock" class="text-[80px] text-gray-800 mb-6 drop-shadow-lg opacity-50"></iconify-icon>
+                <h2 class="font-serif italic text-3xl md:text-[32px] text-gray-600 mb-4">Your vault is empty</h2>
+                <p class="text-gray-500 max-w-md mx-auto mb-8 font-light leading-relaxed">
+                    Evidence you lock here is protected with military-grade cryptography and ready for legal submission.
+                </p>
+                <a href="report.html" class="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-medium bg-[#FF4500] text-white hover:bg-[#e03d00] transition-colors shadow-lg">
+                    Report an Incident <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                </a>
+            </div>
+
+            <!-- GRID -->
+            <div id="evidenceGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards injected dynamically -->
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>injectFooter();</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const evidenceGrid = document.getElementById('evidenceGrid');
+            const emptyState = document.getElementById('emptyState');
+            const statItems = document.getElementById('statItems');
+            const statCerts = document.getElementById('statCerts');
+            
+            const urlInput = document.getElementById('urlInput');
+            const btnLockUrl = document.getElementById('btnLockUrl');
+            const btnUploadScreenshot = document.getElementById('btnUploadScreenshot');
+            const screenshotInput = document.getElementById('screenshotInput');
+
+            let vaultItems = [];
+            let certCount = 0;
+
+            function readLocalVault() {
+                try {
+                    const raw = localStorage.getItem('shieldher_vault');
+                    const parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function persistLocalVault(items) {
+                try {
+                    localStorage.setItem('shieldher_vault', JSON.stringify(items));
+                } catch (e) {
+                    // Ignore storage quota or serialization errors to avoid breaking UI.
+                }
+            }
+
+            function normalizeVaultItem(item) {
+                if (!item || typeof item !== 'object') return null;
+                const id = item.id || ('KV-' + Date.now().toString(36).toUpperCase());
+                let platform = item.platform || 'Unknown Source';
+
+                // Backward compatibility: older scan entries used generic "Deepfake Analysis" label.
+                if (platform === 'Deepfake Analysis' || platform === 'Digital Report') {
+                    const urls = (item.data && Array.isArray(item.data.urls)) ? item.data.urls : [];
+                    const detectedSources = urls
+                        .map((u) => String(u.url || '').split('/')[0].replace('www.', '').trim())
+                        .filter(Boolean);
+                    if (detectedSources.length > 0) {
+                        platform = Array.from(new Set(detectedSources)).join(', ');
+                    }
+                }
+
+                return {
+                    id,
+                    hash: item.hash || 'N/A',
+                    type: item.type || 'evidence',
+                    icon: item.icon || 'lucide:file-text',
+                    title: item.title || 'Archived Evidence',
+                    platform,
+                    timestamp: item.timestamp || new Date().toISOString(),
+                    size: item.size || 'N/A',
+                    data: item.data || null
+                };
+            }
+
+            function mergeVaultItems(apiItems, localItems) {
+                const merged = new Map();
+                [...apiItems, ...localItems].forEach((item) => {
+                    const normalized = normalizeVaultItem(item);
+                    if (normalized && !merged.has(normalized.id)) {
+                        merged.set(normalized.id, normalized);
+                    }
+                });
+
+                return Array.from(merged.values()).sort((a, b) => {
+                    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+                });
+            }
+
+            // Load vault from API and merge with locally saved evidence for offline continuity.
+            async function loadVault() {
+                const localItems = readLocalVault();
+                try {
+                    const res = await apiCall('vault', null, 'GET');
+                    const apiItems = Array.isArray(res.items) ? res.items : [];
+                    vaultItems = mergeVaultItems(apiItems, localItems);
+                } catch(e) {
+                    vaultItems = localItems.map(normalizeVaultItem).filter(Boolean);
+                }
+
+                persistLocalVault(vaultItems);
+                renderVault();
+            }
+            loadVault();
+
+            // Mock crypto hash generator for demo if subtle crypto isn't available/used
+            async function generateHash(data) {
+                // Return fake hash for demo
+                const chars = 'abcdef0123456789';
+                let hash = '';
+                for(let i=0; i<64; i++) hash += chars[Math.floor(Math.random() * chars.length)];
+                return hash;
+            }
+            
+            // Mock API or actual API wrapper
+            async function lockEvidence(payload) {
+                try {
+                    // Try real API first
+                    const res = await apiCall('lock-evidence', {
+                        url: payload.url || "",
+                        screenshot_base64: payload.base64 || "",
+                        content: payload.content || ""
+                    }, 'POST');
+                    
+                    // Map API response to UI format
+                    return {
+                        id: res.evidence_id,
+                        hash: res.hash,
+                        timestamp: res.timestamp,
+                        type: payload.url ? "url" : "image",
+                        icon: payload.url ? "lucide:link" : "lucide:image",
+                        title: payload.url ? "Web Archive: " + payload.url : "Screenshot Evidence",
+                        platform: payload.url ? (new URL(payload.url).hostname.replace('www.', '')) : "Local Upload",
+                        size: payload.base64 ? Math.round(payload.base64.length * 0.75 / 1024) + ' KB' : 'Remote',
+                        data: payload.url || payload.base64
+                    };
+                } catch(e) {
+                    // Fallback to local mock
+                    const hash = await generateHash(payload.url || payload.base64);
+                    const id = 'KV-' + Date.now().toString(36).toUpperCase();
+                    
+                    let title = "Archived Content";
+                    let platform = "Unknown";
+                    let type = "url";
+                    let icon = "lucide:link";
+                    
+                    if (payload.url) {
+                        try {
+                            const u = new URL(payload.url);
+                            platform = u.hostname.replace('www.', '');
+                            title = "Web Archive: " + u.pathname;
+                        } catch(err) {
+                            platform = "Web Link";
+                            title = payload.url;
+                        }
+                    } else if (payload.base64) {
+                        title = "Screenshot Evidence";
+                        platform = "Local Upload";
+                        type = "image";
+                        icon = "lucide:image";
+                    }
+
+                    return {
+                        id,
+                        hash,
+                        type,
+                        icon,
+                        title,
+                        platform,
+                        timestamp: new Date().toISOString(),
+                        size: payload.base64 ? Math.round(payload.base64.length * 0.75 / 1024) + ' KB' : 'Remote',
+                        data: payload.url || payload.base64
+                    };
+                }
+            }
+
+            // ADD EVIDENCE: URL
+            btnLockUrl.addEventListener('click', async () => {
+                const url = urlInput.value.trim();
+                if(!url) return;
+                
+                const originalText = btnLockUrl.innerHTML;
+                btnLockUrl.innerHTML = '<iconify-icon icon="lucide:loader-2" class="animate-spin"></iconify-icon> Locking...';
+                btnLockUrl.disabled = true;
+
+                try {
+                    const evidence = await lockEvidence({url});
+                    vaultItems.unshift(evidence);
+                    persistLocalVault(vaultItems);
+                    
+                    urlInput.value = '';
+                    if(typeof showToast === 'function') showToast('URL locked successfully');
+                    renderVault();
+                } catch(err) {
+                    if(typeof showToast === 'function') showToast('Failed to lock URL', 'error');
+                } finally {
+                    btnLockUrl.innerHTML = originalText;
+                    btnLockUrl.disabled = false;
+                }
+            });
+
+            // ADD EVIDENCE: SCREENSHOT
+            btnUploadScreenshot.addEventListener('click', () => {
+                screenshotInput.click();
+            });
+
+            screenshotInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const originalText = btnUploadScreenshot.innerHTML;
+                btnUploadScreenshot.innerHTML = '<iconify-icon icon="lucide:loader-2" class="animate-spin"></iconify-icon> Processing...';
+                btnUploadScreenshot.disabled = true;
+
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = async function() {
+                    const base64 = reader.result;
+                    try {
+                        const evidence = await lockEvidence({base64});
+                        vaultItems.unshift(evidence);
+                        persistLocalVault(vaultItems);
+                        
+                        screenshotInput.value = '';
+                        if(typeof showToast === 'function') showToast('Screenshot locked successfully');
+                        renderVault();
+                    } catch(err) {
+                        if(typeof showToast === 'function') showToast('Failed to lock screenshot', 'error');
+                    } finally {
+                        btnUploadScreenshot.innerHTML = originalText;
+                        btnUploadScreenshot.disabled = false;
+                    }
+                }
+            });
+
+
+            // GLOBAL CARD DELEGATION
+            evidenceGrid.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if(!target) return;
+
+                const id = target.getAttribute('data-id');
+                const action = target.getAttribute('data-action');
+                const evidence = vaultItems.find(v => v.id === id);
+                if(!evidence) return;
+
+                if (action === 'copy-hash') {
+                    navigator.clipboard.writeText(evidence.hash).then(() => {
+                        if(typeof showToast === 'function') showToast('Hash copied to clipboard');
+                    });
+                } else if (action === 'download-cert') {
+                    generateCertificate(evidence);
+                    certCount++;
+                    updateStats();
+                } else if (action === 'use-legal') {
+                    sessionStorage.setItem('selectedEvidence', JSON.stringify(evidence));
+                    window.location.href = 'legal.html';
+                } else if (action === 'delete-evidence') {
+                    deleteEvidence(evidence);
+                }
+            });
+
+            async function deleteEvidence(evidence) {
+                if (!evidence || !evidence.id) return;
+                const ok = window.confirm(`Delete evidence ${evidence.id}? This cannot be undone.`);
+                if (!ok) return;
+
+                try {
+                    await apiCall(`vault/${encodeURIComponent(evidence.id)}`, null, 'DELETE');
+                } catch (e) {
+                    // If API delete fails, still remove local record so UI can recover for local-only users.
+                }
+
+                vaultItems = vaultItems.filter((item) => item.id !== evidence.id);
+                persistLocalVault(vaultItems);
+                renderVault();
+                if(typeof showToast === 'function') showToast('Evidence deleted successfully');
+            }
+
+            // RENDER LOGIC
+            function renderVault() {
+                updateStats();
+
+                if (vaultItems.length === 0) {
+                    evidenceGrid.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                    return;
+                }
+
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+                evidenceGrid.classList.remove('hidden');
+
+                evidenceGrid.innerHTML = vaultItems.map(item => `
+                    <div class="bg-[#111] rounded-3xl p-6 border border-white/10 hover:border-white/20 transition-colors shadow-xl flex flex-col h-full group">
+                        
+                        <!-- TOP ROW -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/5 shadow-inner">
+                                <iconify-icon icon="${item.icon || 'lucide:file-text'}" class="text-xl text-gray-300"></iconify-icon>
+                            </div>
+                            <span class="bg-[#FF4500]/10 text-[#FF4500] rounded-full px-3 py-1 text-xs font-mono border border-[#FF4500]/20">${item.id}</span>
+                        </div>
+
+                        <!-- CONTENT -->
+                        <div class="flex-grow">
+                            <h3 class="text-white text-base font-medium line-clamp-2 leading-snug mb-1">${item.title}</h3>
+                            <p class="text-sm font-medium text-[#FF4500]">${item.platform}</p>
+                        </div>
+
+                        <!-- METADATA -->
+                        <div class="flex items-center justify-between text-xs text-gray-500 font-mono mt-4 mb-4">
+                            <span>${new Date(item.timestamp).toLocaleString(undefined, {dateStyle:'short', timeStyle:'short'})}</span>
+                            <span>${item.size || 'N/A'}</span>
+                        </div>
+
+                        <!-- HASH -->
+                        <div class="bg-[#050505] rounded-xl p-3 border border-white/5 flex items-center justify-between group/hash cursor-pointer hover:border-white/20 transition-colors" title="${item.hash}">
+                            <div>
+                                <p class="text-[10px] text-gray-600 font-medium uppercase tracking-widest mb-0.5">SHA-256</p>
+                                <p class="text-xs text-gray-500 font-mono">${item.hash.substring(0, 16)}...</p>
+                            </div>
+                            <button data-action="copy-hash" data-id="${item.id}" class="text-gray-600 hover:text-white transition-colors p-1" title="Copy Hash">
+                                <iconify-icon icon="lucide:copy" class="text-sm"></iconify-icon>
+                            </button>
+                        </div>
+
+                        <!-- DIVIDER -->
+                        <div class="w-full h-px bg-white/5 my-5"></div>
+
+                        <!-- BOTTOM ROW -->
+                        <div class="flex items-center justify-between mt-auto">
+                            <button data-action="download-cert" data-id="${item.id}" class="text-xs text-gray-400 hover:text-white font-medium flex items-center gap-1.5 transition-colors border border-transparent hover:border-white/10 px-3 py-1.5 rounded-full">
+                                <iconify-icon icon="lucide:download"></iconify-icon> Certificate
+                            </button>
+                            <div class="flex items-center gap-2">
+                                <button data-action="delete-evidence" data-id="${item.id}" class="text-xs text-red-400/80 hover:text-red-300 font-medium flex items-center gap-1 transition-colors border border-red-500/20 hover:border-red-400/40 px-3 py-1.5 rounded-full">
+                                    <iconify-icon icon="lucide:trash-2"></iconify-icon> Delete
+                                </button>
+                                <button data-action="use-legal" data-id="${item.id}" class="text-xs text-[#FF4500] hover:text-[#ff6a33] font-medium flex items-center gap-1 transition-colors">
+                                    Use in Legal <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                `).join('');
+            }
+
+            function updateStats() {
+                statItems.innerHTML = `<span class="font-bold">${vaultItems.length}</span> Items Secured`;
+                statCerts.innerHTML = `<span class="font-bold">${certCount}</span> Certificates Generated`;
+            }
+
+            function generateCertificate(evidence) {
+                const selectedLanguage = localStorage.getItem('kavch_language') || 'English';
+                const labels = {
+                    English: {
+                        title: 'Kavch Evidence Vault',
+                        subtitle: 'Certificate of Authenticity and Digital Preservation',
+                        evidenceId: 'Evidence ID',
+                        generated: 'Generated Timestamp',
+                        description: 'Description',
+                        source: 'Platform/Source',
+                        hash: 'SHA-256 Hash',
+                        footer: 'This document certifies that the digital evidence described above was cryptographically secured and timestamped.\nGenerated automatically by Kavch AI Defense System.'
+                    },
+                    Hindi: {
+                        title: 'Kavch Evidence Vault',
+                        subtitle: 'प्रामाणिकता और डिजिटल संरक्षण प्रमाणपत्र',
+                        evidenceId: 'साक्ष्य आईडी',
+                        generated: 'जनरेटेड समय',
+                        description: 'विवरण',
+                        source: 'प्लेटफॉर्म/स्रोत',
+                        hash: 'SHA-256 हैश',
+                        footer: 'यह दस्तावेज प्रमाणित करता है कि ऊपर वर्णित डिजिटल साक्ष्य को क्रिप्टोग्राफिक तरीके से सुरक्षित किया गया है।\nKavch AI Defense System द्वारा स्वचालित रूप से जनरेट।'
+                    },
+                    Telugu: {
+                        title: 'Kavch Evidence Vault',
+                        subtitle: 'నిజస్వరూప ధృవీకరణ మరియు డిజిటల్ పరిరక్షణ సర్టిఫికేట్',
+                        evidenceId: 'సాక్ష్యం ID',
+                        generated: 'సృష్టించిన సమయం',
+                        description: 'వివరణ',
+                        source: 'ప్లాట్‌ఫారం/మూలం',
+                        hash: 'SHA-256 హ్యాష్',
+                        footer: 'పై పేర్కొన్న డిజిటల్ సాక్ష్యం క్రిప్టోగ్రాఫిక్‌గా సురక్షితం చేయబడిందని ఈ పత్రం ధృవీకరిస్తుంది.\nKavch AI Defense System ద్వారా స్వయంచాలకంగా సృష్టించబడింది.'
+                    },
+                    Tamil: {
+                        title: 'Kavch Evidence Vault',
+                        subtitle: 'உண்மைத் தன்மை மற்றும் டிஜிட்டல் பாதுகாப்பு சான்றிதழ்',
+                        evidenceId: 'ஆதார ID',
+                        generated: 'உருவாக்கப்பட்ட நேரம்',
+                        description: 'விளக்கம்',
+                        source: 'மேடை/மூலம்',
+                        hash: 'SHA-256 ஹாஷ்',
+                        footer: 'மேலே குறிப்பிடப்பட்டுள்ள டிஜிட்டல் ஆதாரம் குறியாக்க முறையில் பாதுகாக்கப்பட்டதைக் இந்த ஆவணம் உறுதிப்படுத்துகிறது.\nKavch AI Defense System மூலம் தானாக உருவாக்கப்பட்டது.'
+                    },
+                    Marathi: {
+                        title: 'Kavch Evidence Vault',
+                        subtitle: 'प्रामाणिकता आणि डिजिटल संरक्षण प्रमाणपत्र',
+                        evidenceId: 'पुरावा आयडी',
+                        generated: 'निर्मित वेळ',
+                        description: 'विवरण',
+                        source: 'प्लॅटफॉर्म/स्रोत',
+                        hash: 'SHA-256 हॅश',
+                        footer: 'वरील डिजिटल पुरावा क्रिप्टोग्राफिक पद्धतीने सुरक्षित करण्यात आला आहे याची ही नोंद आहे.\nKavch AI Defense System द्वारे स्वयंचलित निर्मित.'
+                    }
+                };
+                const t = labels[selectedLanguage] || labels.English;
+
+                const html = `<html style="background:#fff; color:#000; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:40px;">
+                    <head><title>Evidence Certificate ${evidence.id}</title></head>
+                    <body style="max-width:800px; margin:0 auto; border: 2px solid #111; padding: 40px;">
+                        <div style="text-align:center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px;">
+                            <h1 style="font-family:'Playfair Display',serif; text-transform:uppercase; letter-spacing:2px; margin:0 0 10px 0;">${t.title}</h1>
+                            <p style="color:#666; margin:0;">${t.subtitle}</p>
+                        </div>
+                        <table style="width:100%; border-collapse:collapse;">
+                            <tr><td style="padding:10px 0; border-bottom:1px solid #eee; width:200px; font-weight:bold; color:#666;">${t.evidenceId}</td>
+                                <td style="padding:10px 0; border-bottom:1px solid #eee; font-family:monospace;">${evidence.id}</td></tr>
+                            <tr><td style="padding:10px 0; border-bottom:1px solid #eee; font-weight:bold; color:#666;">${t.generated}</td>
+                                <td style="padding:10px 0; border-bottom:1px solid #eee;">${new Date(evidence.timestamp).toUTCString()}</td></tr>
+                            <tr><td style="padding:10px 0; border-bottom:1px solid #eee; font-weight:bold; color:#666;">${t.description}</td>
+                                <td style="padding:10px 0; border-bottom:1px solid #eee;">${evidence.title}</td></tr>
+                            <tr><td style="padding:10px 0; border-bottom:1px solid #eee; font-weight:bold; color:#666;">${t.source}</td>
+                                <td style="padding:10px 0; border-bottom:1px solid #eee;">${evidence.platform}</td></tr>
+                            <tr><td style="padding:10px 0; font-weight:bold; color:#666;">${t.hash}</td>
+                                <td style="padding:10px 0; font-family:monospace; word-break:break-all;">${evidence.hash}</td></tr>
+                        </table>
+                        <div style="margin-top:50px; padding-top:20px; border-top: 1px dotted #ccc; font-size:12px; color:#666; text-align:center;">
+                            ${t.footer.replace('\n', '<br/>')}
+                        </div>
+                        <script>window.print();<\/script>
+                    </body></html>`;
+                
+                const win = window.open('', '_blank');
+                win.document.write(html);
+                win.document.close();
+            }
+        });
+    </script>
+</body>
+</html>

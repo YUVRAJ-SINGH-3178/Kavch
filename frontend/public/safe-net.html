@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavch | Safe Net</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #FF4500;
+            --card: #111111;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Thin Scrollbar for Emergency Strip */
+        .thin-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .thin-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 69, 0, 0.05);
+            border-radius: 4px;
+        }
+        .thin-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 69, 0, 0.3);
+            border-radius: 4px;
+        }
+    </style>
+    <script src="components.js"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+    
+    <script>injectNavbar();</script>
+
+    <main class="flex-grow pt-40 pb-32">
+        
+        <!-- PAGE HEADER -->
+        <section class="container mx-auto px-6 text-center max-w-4xl reveal mb-16">
+            <div class="inline-block border border-white/10 rounded-full px-4 py-1 text-[10px] md:text-xs uppercase tracking-widest text-gray-400 mb-8 font-medium bg-white/5">
+                Real Support. Real People.
+            </div>
+            
+            <h1 class="font-serif text-[40px] md:text-[56px] text-white/90 mb-6 leading-[1.1] tracking-tight">
+                You are not <br/> <em class="italic font-light text-white/70">alone in this.</em>
+            </h1>
+            
+            <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed font-light">
+                Connect with verified NGOs, highly-rated cyber lawyers, and essential mental health professionals equipped to help victims exactly like you.
+            </p>
+        </section>
+
+        <!-- EMERGENCY HOTLINES STRIP -->
+        <section class="w-full bg-[#FF4500]/10 border-y border-[#FF4500]/20 py-6 mb-16 reveal" style="transition-delay: 150ms;">
+            <div class="container mx-auto px-6">
+                <!-- Mobile horizontal scroll container -->
+                <div class="flex items-center md:justify-center gap-6 md:gap-12 overflow-x-auto thin-scroll pb-2 md:pb-0 whitespace-nowrap">
+                    
+                    <!-- Emergency 1 -->
+                    <div class="flex items-center gap-4 shrink-0 pr-6 border-r border-[#FF4500]/20">
+                        <iconify-icon icon="lucide:phone-call" class="text-2xl text-[#FF4500]"></iconify-icon>
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-[#FF4500] font-bold">Cybercrime Helpline</p>
+                            <p class="text-white font-mono text-lg font-bold">1930</p>
+                        </div>
+                        <a href="tel:1930" class="ml-2 bg-[#FF4500] text-white rounded-full px-5 py-2 text-sm font-bold shadow-[0_4px_15px_rgba(255,69,0,0.3)] hover:scale-105 transition-transform">Call Now</a>
+                    </div>
+
+                    <!-- Emergency 2 -->
+                    <div class="flex items-center gap-4 shrink-0 pr-6 border-r border-[#FF4500]/20">
+                        <iconify-icon icon="lucide:shield-alert" class="text-2xl text-[#FF4500]"></iconify-icon>
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-[#FF4500] font-bold">Women's Helpline</p>
+                            <p class="text-white font-mono text-lg font-bold">181</p>
+                        </div>
+                        <a href="tel:181" class="ml-2 bg-[#FF4500] text-white rounded-full px-5 py-2 text-sm font-bold shadow-[0_4px_15px_rgba(255,69,0,0.3)] hover:scale-105 transition-transform">Call Now</a>
+                    </div>
+
+                    <!-- Emergency 3 -->
+                    <div class="flex items-center gap-4 shrink-0">
+                        <iconify-icon icon="lucide:siren" class="text-2xl text-[#FF4500]"></iconify-icon>
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-[#FF4500] font-bold">Police Emergency</p>
+                            <p class="text-white font-mono text-lg font-bold">100</p>
+                        </div>
+                        <a href="tel:100" class="ml-2 bg-[#FF4500] text-white rounded-full px-5 py-2 text-sm font-bold shadow-[0_4px_15px_rgba(255,69,0,0.3)] hover:scale-105 transition-transform">Call Now</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FILTER & CONTACTS SECTION -->
+        <section class="container mx-auto px-6 max-w-6xl">
+            
+            <!-- FILTER BAR -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 reveal" style="transition-delay: 250ms;">
+                
+                <!-- Pill Filters -->
+                <div class="flex flex-wrap items-center gap-3" id="categoryFilters">
+                    <button class="filter-btn active bg-white text-black rounded-full px-5 py-2 text-sm font-medium transition-all" data-category="All">All</button>
+                    <button class="filter-btn bg-transparent border border-white/10 text-gray-400 hover:text-white hover:border-white/30 rounded-full px-5 py-2 text-sm font-medium transition-all" data-category="Legal Aid">Legal Aid</button>
+                    <button class="filter-btn bg-transparent border border-white/10 text-gray-400 hover:text-white hover:border-white/30 rounded-full px-5 py-2 text-sm font-medium transition-all" data-category="NGO">NGOs</button>
+                    <button class="filter-btn bg-transparent border border-white/10 text-gray-400 hover:text-white hover:border-white/30 rounded-full px-5 py-2 text-sm font-medium transition-all" data-category="Cyber Lawyers">Cyber Lawyers</button>
+                    <button class="filter-btn bg-transparent border border-white/10 text-gray-400 hover:text-white hover:border-white/30 rounded-full px-5 py-2 text-sm font-medium transition-all" data-category="Mental Health">Mental Health</button>
+                </div>
+
+                <!-- City Dropdown -->
+                <div class="shrink-0 relative">
+                    <select id="cityFilter" class="bg-[#111] border border-white/10 rounded-full px-6 py-2.5 text-sm text-white appearance-none cursor-pointer focus:border-[#FF4500]/50 outline-none hover:bg-white/5 transition-colors pr-10">
+                        <option value="All">All India</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Lucknow">Lucknow</option>
+                    </select>
+                    <iconify-icon icon="lucide:chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-sm"></iconify-icon>
+                </div>
+            </div>
+
+            <!-- CONTACTS GRID -->
+            <div id="contactsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- SHARE A RESOURCE SECTION -->
+            <div class="bg-[#111] rounded-3xl p-10 md:p-16 text-center border border-white/5 shadow-2xl reveal w-full max-w-3xl mx-auto">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 text-[#FF4500] mb-6">
+                    <iconify-icon icon="lucide:heart-handshake" class="text-3xl"></iconify-icon>
+                </div>
+                <h2 class="font-serif italic text-3xl md:text-[32px] text-white mb-4">Know a resource we're missing?</h2>
+                <p class="text-base text-gray-400 max-w-lg mx-auto mb-8 font-light">
+                    Help us build the most complete support network for Indian women online. Send us trusted organizations or certified lawyers.
+                </p>
+                <p class="text-sm text-gray-500 font-medium">Reach out via Email: <a href="mailto:resources@Kavch.in" class="text-[#FF4500] hover:text-[#ff6a33] underline underline-offset-4 decoration-[#FF4500]/30 hover:decoration-[#FF4500] transition-colors ml-1 tracking-wide">resources@Kavch.in</a></p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>injectFooter();</script>
+
+    <script>
+        // HARDCODED CONTACTS DATA (per architectural instruction)
+        const CONTACTS_DATA = [
+            {
+                name: "iCall",
+                type: "Mental Health",
+                desc: "Free counseling for cyber harassment victims",
+                contact: "9152987821",
+                response: "24 hours",
+                coverage: "All India",
+                action: "call",
+                free: true
+            },
+            {
+                name: "Point of View (POV)",
+                type: "NGO",
+                desc: "Digital safety and online violence support for women",
+                contact: "022-23649651",
+                response: "Working hours",
+                coverage: "Mumbai",
+                action: "call",
+                free: true
+            },
+            {
+                name: "Breakthrough India",
+                type: "NGO", 
+                desc: "Crisis response and support for gender-based violence",
+                contact: "https://breakthrough.tv",
+                response: "24-48 hours",
+                coverage: "Delhi, Lucknow",
+                action: "website",
+                free: true
+            },
+            {
+                name: "Cyber Peace Foundation",
+                type: "Legal Aid",
+                desc: "Free legal consultation for cybercrime victims",
+                contact: "https://cyberpeace.net",
+                response: "2-3 days",
+                coverage: "All India",
+                action: "website",
+                free: true
+            },
+            {
+                name: "National Commission for Women",
+                type: "Legal Aid",
+                desc: "File formal complaints for gender-based cyber crimes",
+                contact: "https://ncwapps.nic.in",
+                response: "1-2 weeks",
+                coverage: "All India",
+                action: "website",
+                free: true
+            },
+            {
+                name: "Snehi",
+                type: "Mental Health",
+                desc: "Emotional support helpline for crisis situations",
+                contact: "912227726771",
+                response: "Immediate",
+                coverage: "All India",
+                action: "call",
+                free: true
+            },
+            {
+                name: "Majlis Legal Centre",
+                type: "Cyber Lawyers",
+                desc: "Pro-bono legal aid for women in Mumbai",
+                contact: "https://majlislaw.com",
+                response: "3-5 days",
+                coverage: "Mumbai",
+                action: "website",
+                free: true
+            },
+            {
+                name: "Cybercrime.gov.in",
+                type: "Legal Aid",
+                desc: "Official government cybercrime reporting portal",
+                contact: "https://cybercrime.gov.in",
+                response: "Varies",
+                coverage: "All India",
+                action: "website",
+                free: true
+            },
+            {
+                name: "iDream Career (CyberSaathi)",
+                type: "NGO",
+                desc: "Digital literacy and online safety for women",
+                contact: "18001233136",
+                response: "Working hours",
+                coverage: "All India",
+                action: "call",
+                free: true
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactsGrid = document.getElementById('contactsGrid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const cityFilter = document.getElementById('cityFilter');
+            
+            let activeCategory = 'All';
+            let activeCity = 'All';
+
+            // Mapping Category styles
+            const getCategoryBadgeStyles = (type) => {
+                const map = {
+                    'Mental Health': 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+                    'NGO': 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+                    'Legal Aid': 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                    'Cyber Lawyers': 'bg-[#FF4500]/10 text-[#FF4500] border-[#FF4500]/20'
+                };
+                return map[type] || 'bg-white/10 text-white border-white/20';
+            };
+
+            const renderContacts = () => {
+                // Filter array
+                const filtered = CONTACTS_DATA.filter(contact => {
+                    const matchCategory = activeCategory === 'All' || contact.type === activeCategory;
+                    
+                    // Allow 'All India' mapping to naturally show up.
+                    // If filter is specific city, check if coverage includes City or 'All India'
+                    const matchCity = activeCity === 'All' || 
+                                      contact.coverage.includes(activeCity) || 
+                                      contact.coverage.includes('All India');
+
+                    return matchCategory && matchCity;
+                });
+
+                // Clear
+                contactsGrid.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    contactsGrid.innerHTML = `<div class="col-span-full py-16 text-center text-gray-500 italic">No resources found matching both filters. Try broadening your local search.</div>`;
+                    return;
+                }
+
+                // Inject Cards with staggered delay classes
+                const html = filtered.map((c, index) => {
+                    
+                    const delay = (index % 3) * 100; // 0, 100, 200...
+                    const badgeClass = getCategoryBadgeStyles(c.type);
+                    
+                    // Call vs Website button logic
+                    let btnHTML = '';
+                    if(c.action === 'call') {
+                        btnHTML = `
+                        <a href="tel:${c.contact}" class="w-full bg-[#FF4500] text-white rounded-full py-3.5 text-sm font-bold hover:bg-[#e03d00] transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,69,0,0.15)] mt-4 group">
+                            <iconify-icon icon="lucide:phone-call" class="group-hover:-rotate-12 transition-transform"></iconify-icon> Call Now
+                        </a>`;
+                    } else {
+                        btnHTML = `
+                        <a href="${c.contact}" target="_blank" rel="noopener noreferrer" class="w-full bg-transparent border border-white/20 text-white rounded-full py-3.5 text-sm font-medium hover:bg-white/5 hover:border-white/40 transition-colors flex items-center justify-center gap-2 mt-4 mt-auto">
+                            Visit Site <iconify-icon icon="lucide:external-link" class="text-xs"></iconify-icon>
+                        </a>`;
+                    }
+
+                    return `
+                    <div class="reveal active bg-[#111] border border-white/10 rounded-3xl p-6 hover:border-[#FF4500]/30 transition-all duration-300 shadow-xl flex flex-col h-full transform opacity-0 translate-y-8 animate-fade-in-up" style="animation-duration: 600ms; animation-fill-mode: forwards; animation-delay: ${delay}ms;">
+                        
+                        <!-- TOP -->
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="border text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-sm ${badgeClass}">
+                                ${c.type}
+                            </span>
+                            ${c.free ? '<span class="bg-green-500/10 text-green-500 border border-green-500/20 px-2.5 py-1 rounded-full text-[10px] uppercase font-bold flex items-center gap-1"><iconify-icon icon="lucide:check-circle-2"></iconify-icon> Free</span>' : ''}
+                        </div>
+                        
+                        <!-- MIDDLE -->
+                        <h3 class="font-serif text-[22px] text-white mb-2 leading-tight">${c.name}</h3>
+                        <p class="text-sm text-gray-400 font-light mb-6 flex-grow">${c.desc}</p>
+                        
+                        <!-- DIVIDER -->
+                        <div class="w-full h-px bg-white/5 mb-4"></div>
+
+                        <!-- METADATA -->
+                        <div class="flex flex-col gap-2 mb-2">
+                            <p class="text-xs text-gray-500 flex items-center gap-2">
+                                <iconify-icon icon="lucide:clock" class="text-gray-600"></iconify-icon> Responds in ${c.response}
+                            </p>
+                            <p class="text-xs text-gray-500 flex items-center gap-2">
+                                <iconify-icon icon="lucide:map-pin" class="text-gray-600"></iconify-icon> ${c.coverage}
+                            </p>
+                        </div>
+
+                        <!-- BOTTOM ACTION -->
+                        ${btnHTML}
+
+                    </div>
+                    `;
+                }).join('');
+
+                contactsGrid.innerHTML = html;
+            };
+
+            // Custom inline animation for initial grid load without intersection observer overhead
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fade-in-up {
+                    0% { opacity: 0; transform: translateY(30px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fade-in-up {
+                    animation-name: fade-in-up;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Filter Button Listeners
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Reset styling
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-white', 'text-black');
+                        b.classList.add('bg-transparent', 'border', 'border-white/10', 'text-gray-400');
+                    });
+                    
+                    // Activate styling
+                    const target = e.target;
+                    target.classList.remove('bg-transparent', 'border', 'border-white/10', 'text-gray-400');
+                    target.classList.add('bg-white', 'text-black');
+                    
+                    activeCategory = target.getAttribute('data-category');
+                    renderContacts();
+                });
+            });
+
+            // City Filter Listener
+            cityFilter.addEventListener('change', (e) => {
+                activeCity = e.target.value;
+                renderContacts();
+            });
+
+            // Init
+            // We use setTimeout slightly to ensure the .reveal script in body doesn't conflict with our custom fade
+            setTimeout(renderContacts, 50);
+        });
+    </script>
+</body>
+</html>
